@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,6 @@
     <title>Happy Holi 2025</title>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Lobster|Pacifico|Kaushan+Script|Baloo+Bhaina|Bangers');
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(45deg, #ff4081, #ffeb3b, #4caf50, #2196f3);
@@ -43,7 +43,7 @@
             font-size: 18px;
             border-radius: 5px;
             border: none;
-            margin-top: 15px;
+            margin-top: 10px;
             text-align: center;
             width: 80%;
             max-width: 300px;
@@ -63,26 +63,10 @@
         .button:hover { background: #e65100; transform: scale(1.1); }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
-        /* Falling Color Particles (Gulal Effect) */
-        .color-particle {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            opacity: 0.7;
-            animation: fall 5s linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-100vh) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
-
-        /* Holi Color Splash Effect */
         .color-splash {
             position: absolute;
             width: 150px;
             height: 150px;
-            background: radial-gradient(circle, transparent 20%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.4) 100%);
             border-radius: 50%;
             transform: scale(0);
             opacity: 0;
@@ -99,7 +83,8 @@
     <h2 id="subtext">May your life be filled with vibrant colors and joy! 🌈</h2>
 
     <div id="inputBox">
-        <input type="text" id="nameInput" placeholder="Enter your Friend's Name">
+        <input type="text" id="senderName" placeholder="Your Name (Sender)">
+        <input type="text" id="receiverName" placeholder="Friend's Name (Receiver)">
         <button class="button" onclick="generateWish()">Generate Link 🎨</button>
     </div>
 
@@ -109,12 +94,17 @@
 
     <script>
         function generateWish() {
-            let name = document.getElementById("nameInput").value.trim();
-            if (name === "") {
-                alert("Please enter a name!");
+            let sender = document.getElementById("senderName").value.trim();
+            let receiver = document.getElementById("receiverName").value.trim();
+            
+            if (sender === "" || receiver === "") {
+                alert("Please enter both names!");
                 return;
             }
-            let url = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(name);
+            
+            let url = window.location.origin + window.location.pathname + 
+                      `?sender=${encodeURIComponent(sender)}&receiver=${encodeURIComponent(receiver)}`;
+            
             document.getElementById("linkText").innerHTML = `🔗 <a href="${url}" target="_blank" style="color:white;">${url}</a>`;
             document.getElementById("inputBox").style.display = "none";
             document.getElementById("shareBtn").style.display = "block";
@@ -131,11 +121,14 @@
 
         function loadFromURL() {
             let params = new URLSearchParams(window.location.search);
-            let name = params.get("name");
-            if (name) {
-                name = decodeURIComponent(name);
-                document.getElementById("wish").innerText = `🎨 Happy Holi ${name}! 🎉`;
-                document.getElementById("subtext").innerText = `Wishing you a festival of colors and joy, ${name}! 🌈`;
+            let sender = params.get("sender");
+            let receiver = params.get("receiver");
+
+            if (sender && receiver) {
+                sender = decodeURIComponent(sender);
+                receiver = decodeURIComponent(receiver);
+                document.getElementById("wish").innerText = `🎨 Happy Holi ${receiver}! 🎉`;
+                document.getElementById("subtext").innerText = `This special wish is from ${sender}! 🌸🌈`;
                 document.getElementById("inputBox").style.display = "none";
                 document.getElementById("shareBtn").style.display = "none";
             }
@@ -151,19 +144,6 @@
             setTimeout(() => splash.remove(), 1000);
         }
 
-        function createColorParticles() {
-            let colors = ["#ff4081", "#1e88e5", "#ffeb3b", "#76ff03", "#ff5722"];
-            for (let i = 0; i < 30; i++) {
-                let particle = document.createElement("div");
-                particle.className = "color-particle";
-                particle.style.left = Math.random() * window.innerWidth + "px";
-                particle.style.animationDuration = (3 + Math.random() * 3) + "s";
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 5000);
-            }
-        }
-
         function getRandomColor() {
             let colors = ["#ff4081", "#1e88e5", "#ffeb3b", "#76ff03", "#ff5722"];
             return colors[Math.floor(Math.random() * colors.length)];
@@ -171,7 +151,6 @@
 
         window.onload = function() {
             loadFromURL();
-            createColorParticles();
         };
     </script>
 </body>
